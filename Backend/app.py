@@ -5,19 +5,21 @@ import pandas as pd
 import os
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})  # Fix CORS issue for port 5500
+
+# ✅ Allow CORS for Vercel frontend
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 EXCEL_FILE = "form_data.xlsx"
 
-# 📌 Route to Check if Server is Running
+# ✅ Route to Check if Server is Running
 @app.route("/")
 def home():
     return "Flask server is running!"
 
-# 📌 Function to Send Email
+# ✅ Function to Send Email
 def send_email(form_data):
-    sender_email = "ngatsolutions01@gmail.com"  # Update with your email
-    receiver_email = "aayushmishra82017@gmail.com"  # Email to receive form data
+    sender_email = "ngatsolutions01@gmail.com"  # Update with sender email
+    receiver_email = "aayushmishra82017@gmail.com"  # Receiver email
     subject = "New Project Requirement Form Submission"
     
     body = f"""
@@ -34,14 +36,14 @@ def send_email(form_data):
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
-        server.login("ngatsolutions01@gmail.com", "cnaw ejip wwad kvme")  # Use Gmail App Password
+        server.login(sender_email, os.environ.get("EMAIL_PASSWORD"))  # Use ENV variable for security
         server.sendmail(sender_email, receiver_email, message)
         server.quit()
         return "Email sent successfully"
     except Exception as e:
         return f"Error sending email: {str(e)}"
 
-# 📌 Function to Save Data to Excel
+# ✅ Function to Save Data to Excel
 def save_to_excel(form_data):
     new_data = pd.DataFrame([form_data])
     
@@ -53,7 +55,7 @@ def save_to_excel(form_data):
     
     df.to_excel(EXCEL_FILE, index=False)
 
-# 📌 Route to Handle Form Submissions
+# ✅ Route to Handle Form Submissions
 @app.route("/submit-form", methods=["POST"])
 def submit_form():
     try:
@@ -64,6 +66,7 @@ def submit_form():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# 📌 Run Flask Server on Port 5000
+# ✅ Run Flask Server on Dynamic Port for Railway
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get("PORT", 5000))  # Use Railway's assigned port
+    app.run(debug=True, host="0.0.0.0", port=port)
