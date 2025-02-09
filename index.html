@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Requirement Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0d0d0d;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            background: #1a1a2e;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0px 5px 15px rgba(0, 255, 255, 0.3);
+            width: 500px;
+            animation: fadeIn 1s ease-in-out;
+            border: 2px solid #00ffff;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        h2 {
+            text-align: center;
+            color: #00ffff;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: 600;
+            display: block;
+            margin-top: 12px;
+            color: #ffffff;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            background: #0d0d0d;
+            color: #fff;
+        }
+        .checkbox-group {
+            margin: 12px 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 10px;
+            row-gap: 8px;
+        }
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #00ffff;
+            width: 100%;
+        }
+        .checkbox-group input {
+            margin-right: 5px;
+            transform: scale(1.2);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #00ffff;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #00cccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Project Requirement Form</h2>
+        <form id="projectForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" required>
+            
+            <label for="company">Company Name:</label>
+            <input type="text" id="company" required>
+            
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" required>
+            
+            <label>Select Required Projects:</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" value="Document Organiser"> Document Organiser</label>
+                <label><input type="checkbox" value="Payment Order Organiser"> Payment Order Organiser</label>
+                <label><input type="checkbox" value="Bill Organiser"> Bill Organiser</label>
+                <label><input type="checkbox" value="Marketing Station"> Marketing Station</label>
+                <label><input type="checkbox" value="Visitor Management System"> Visitor Management System</label>
+                <label><input type="checkbox" value="Stock Manager and Tracker"> Stock Manager and Tracker</label>
+                <label><input type="checkbox" value="Data Handler"> Data Handler</label>
+                <label><input type="checkbox" value="Production Line Record Keeper"> Production Line Record Keeper</label>
+                <label><input type="checkbox" value="Packaging Line Record Keeper"> Packaging Line Record Keeper</label>
+                <label><input type="checkbox" value="Machine Fault and Maintenance Detector"> Machine Fault and Maintenance Detector</label>
+                <label><input type="checkbox" value="Automated Product Fault Detector"> Automated Product Fault Detector</label>
+                <label><input type="checkbox" value="Machine Line Organiser"> Machine Line Organiser</label>
+            </div>
+            
+            <label for="customRequest">Other Requirements:</label>
+            <textarea id="customRequest" rows="3"></textarea>
+            
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#projectForm').on('submit', function(event) {
+                event.preventDefault();
+                let formData = {
+                    name: $('#name').val(),
+                    email: $('#email').val(),
+                    company: $('#company').val(),
+                    phone: $('#phone').val(),
+                    projects: $('input[type="checkbox"]:checked').map(function() { return this.value; }).get().join(', '),
+                    customRequest: $('#customRequest').val()
+                };
+                
+                $.ajax({
+                    url: 'http://127.0.0.1:5000/submit-form', // Updated to local Flask server
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function(response) {
+                        alert('Form submitted successfully!');
+                    },
+                    error: function(error) {
+                        alert('Error submitting form!');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
