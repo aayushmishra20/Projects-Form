@@ -5,7 +5,9 @@ import pandas as pd
 import os
 
 app = Flask(__name__)
-CORS(app)
+
+# ✅ Allow CORS for your Vercel frontend
+CORS(app, resources={r"/*": {"origins": "*"}})  # Allow requests from any origin
 
 EXCEL_FILE = "form_data.xlsx"
 
@@ -13,9 +15,12 @@ EXCEL_FILE = "form_data.xlsx"
 def home():
     return "Flask server running on Vercel!"
 
-@app.route("/submit-form", methods=["POST"])
+@app.route("/submit-form", methods=["POST", "OPTIONS"])
 def submit_form():
     try:
+        if request.method == "OPTIONS":
+            return jsonify({"message": "CORS preflight request success"}), 200
+        
         data = request.json
         save_to_excel(data)
         email_status = send_email(data)
@@ -42,7 +47,7 @@ def send_email(form_data):
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
-        server.login(sender_email, os.environ.get("EMAIL_PASSWORD"))  # Use Env variable for security
+        server.login(sender_email, os.environ.get("EMAIL_PASSWORD"))  # ✅ Secure App Password
         server.sendmail(sender_email, receiver_email, message)
         server.quit()
         return "Email sent successfully"
@@ -60,6 +65,6 @@ def save_to_excel(form_data):
 
     df.to_excel(EXCEL_FILE, index=False)
 
-# ✅ Vercel requires this entry point
+# ✅ Required for Vercel Deployment
 def handler(event, context):
     return app(event, context)
