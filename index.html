@@ -138,7 +138,7 @@
                 };
                 
                 $.ajax({
-                    url: 'https://projects-form-production.up.railway.app/submit-form', // Updated to local Flask server
+                    url: 'https://projects-form.vercel.app/api/submit-form', // Updated to local Flask server
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(formData),
