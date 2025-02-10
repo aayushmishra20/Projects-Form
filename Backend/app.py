@@ -6,8 +6,8 @@ import os
 
 app = Flask(__name__)
 
-# ✅ Allow CORS for Vercel frontend
-CORS(app, resources={r"/*": {"origins": "*"}})
+# ✅ Allow CORS for Vercel Frontend
+CORS(app, resources={r"/*": {"origins": "https://projects-form.vercel.app"}})  # Allow requests only from your Vercel frontend
 
 EXCEL_FILE = "form_data.xlsx"
 
@@ -19,7 +19,7 @@ def home():
 # ✅ Function to Send Email
 def send_email(form_data):
     sender_email = "ngatsolutions01@gmail.com"  # Update with sender email
-    receiver_email = "aayushmishra82017@gmail.com"  # Receiver email
+    receiver_email = "aayushmishra82017@gmail.com"  # Email to receive form data
     subject = "New Project Requirement Form Submission"
     
     body = f"""
@@ -36,7 +36,7 @@ def send_email(form_data):
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
-        server.login(sender_email, os.environ.get("EMAIL_PASSWORD"))  # Use ENV variable for security
+        server.login(sender_email, os.environ.get("EMAIL_PASSWORD"))  # ✅ Secured App Password via Railway Environment Variable
         server.sendmail(sender_email, receiver_email, message)
         server.quit()
         return "Email sent successfully"
