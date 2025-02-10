@@ -13,15 +13,16 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            height: inherit;
+            margin: 10px;
+            padding: 30px;
         }
         .form-container {
             background: #1a1a2e;
-            padding: 25px;
+            padding: 40px;
             border-radius: 12px;
             box-shadow: 0px 5px 15px rgba(0, 255, 255, 0.3);
-            width: 500px;
+            width: 100%;
             animation: fadeIn 1s ease-in-out;
             border: 2px solid #00ffff;
         }
@@ -54,7 +55,7 @@
         .checkbox-group {
             margin: 12px 0;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(4, 3fr); /* Four equal columns */
             column-gap: 10px;
             row-gap: 8px;
         }
